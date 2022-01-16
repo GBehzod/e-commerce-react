@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Header from "./components/header/header";
-import {Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import {HomePage} from "./pages/homepage/homepage.component";
 import ShopPage from "./pages/shop/shop";
 import AuthPage from "./pages/auth/auth";
@@ -10,6 +10,9 @@ import {onSnapshot} from "firebase/firestore";
 import './App.css'
 import {connect} from "react-redux";
 import {setCurrentUser} from "./redux/user/user.actions";
+import {selectCurrentUser} from "./redux/user/user.selectors";
+import {createStructuredSelector} from "reselect";
+import CheckoutPage from "./pages/checkout/checkout";
 
 class App extends Component {
     constructor(props) {
@@ -50,16 +53,21 @@ class App extends Component {
                 <Header/>
                 <Routes>
                     <Route path='/' element={<HomePage/>}/>
-                    <Route path='/shop' element={<ShopPage/>}/>
-                    <Route path='/auth' element={<AuthPage/>}/>
+                    <Route path='/shop/*'  element={<ShopPage/>}/>
+                    <Route path='/auth' element={this.props.currentUser ? <Navigate to="/"/> : <AuthPage/>}/>
+                    <Route path='/shop/checkout' element={<CheckoutPage />} />
                 </Routes>
             </div>
         );
     }
 }
 
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser
+});
+
 const mapDispatchToProps = dispatch => ({
     setCurrentUser: (user) => dispatch(setCurrentUser(user))
 })
 
-export default connect(null, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

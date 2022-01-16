@@ -59,7 +59,7 @@ class SignIn extends Component {
                         value={this.state.password}
                         required/>
                     <div className="buttons">
-                        <CustomButton type="submit">SIGN IN</CustomButton>
+                        <CustomButton type="submit" onClick={this.handleSubmit}>SIGN IN</CustomButton>
                         <CustomButton onClick={signInWithGoogle} isGoogleSignIn>Sign in with Google</CustomButton>
                     </div>
                 </form>
